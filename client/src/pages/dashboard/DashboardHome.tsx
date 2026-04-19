@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { MemoryPanel } from "@/components/MemoryPanel";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/context/AuthContext";
 
@@ -40,6 +41,8 @@ export function DashboardHome() {
           </Card>
         ))}
       </div>
+
+      <MemoryPanel />
 
       <h2 className="mt-14 font-display text-xl text-white">Jump back in</h2>
       <div className="mt-6 grid gap-6 md:grid-cols-2">
