@@ -17,6 +17,7 @@ import recommendationRoutes from "./routes/recommendations.js";
 import metaRoutes from "./routes/meta.js";
 import behaviorRoutes from "./routes/behavior.js";
 import memoryRoutes from "./routes/memory.js";
+import notificationRoutes from "./routes/notifications.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -37,6 +38,7 @@ app.use("/api/recommendations", recommendationRoutes);
 app.use("/api", metaRoutes);
 app.use("/api/behavior", behaviorRoutes);
 app.use("/api/memory", memoryRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });

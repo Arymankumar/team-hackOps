@@ -2,6 +2,7 @@ import { Router } from "express";
 import { PRODUCTS } from "../data/seedProducts.js";
 import { authMiddleware, getUserId } from "../middleware/auth.js";
 import { getStore, saveStore } from "../data/store.js";
+import { defaultBehavior, retainBehaviorMemory } from "../lib/personalization.js";
 
 const router = Router();
 
@@ -26,7 +27,12 @@ router.post("/:productId", authMiddleware, (req, res) => {
   const list = store.wishlists[uid] ?? [];
   if (!list.includes(p.id)) list.push(p.id);
   store.wishlists[uid] = list;
+  const behavior = store.userBehavior[uid] ?? defaultBehavior();
+  behavior.wishlistProductIds = list;
+  behavior.lastInteractedAt = new Date().toISOString();
+  store.userBehavior[uid] = behavior;
   saveStore();
+  void retainBehaviorMemory(uid, `Wishlisted product: ${p.name}`).catch(() => {});
   res.json({ ok: true, ids: list });
 });
 
@@ -35,6 +41,10 @@ router.delete("/:productId", authMiddleware, (req, res) => {
   const uid = getUserId(req);
   const list = (store.wishlists[uid] ?? []).filter((id) => id !== req.params.productId);
   store.wishlists[uid] = list;
+  const behavior = store.userBehavior[uid] ?? defaultBehavior();
+  behavior.wishlistProductIds = list;
+  behavior.lastInteractedAt = new Date().toISOString();
+  store.userBehavior[uid] = behavior;
   saveStore();
   res.json({ ok: true, ids: list });
 });

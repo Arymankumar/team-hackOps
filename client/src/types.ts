@@ -47,3 +47,29 @@ export type Deal = {
   endsAt: string;
   code: string;
 };
+
+export type ProductOffer = {
+  platform: "Meesho" | "Amazon" | "Flipkart" | "Shopsy";
+  price: number;
+  discountPercent: number;
+  deliveryTime: string;
+  sellerName: string;
+};
+
+export type SellerRecommendation = {
+  name: string;
+  platform: string;
+  rating: number;
+  reviews: number;
+  trustBadge: boolean;
+};
+
+export type DealNotification = {
+  id: string;
+  productId: string;
+  title: string;
+  message: string;
+  discountPercent: number;
+  createdAt: string;
+  read: boolean;
+};

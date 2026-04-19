@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MemoryPanel } from "@/components/MemoryPanel";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/context/AuthContext";
+import { api } from "@/lib/api";
+import type { Product } from "@/types";
 
 const tiles = [
   { title: "Product Explorer", desc: "Filter by price, rating, and category.", to: "/app/products", stat: "Live catalog" },
@@ -13,6 +16,22 @@ const tiles = [
 
 export function DashboardHome() {
   const { user } = useAuth();
+  const [feed, setFeed] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await api<{ recommendations: Product[] }>("/recommendations");
+        if (!cancelled) setFeed(data.recommendations.slice(0, 4));
+      } catch {
+        if (!cancelled) setFeed([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -43,6 +62,25 @@ export function DashboardHome() {
       </div>
 
       <MemoryPanel />
+
+      <h2 className="mt-14 font-display text-xl text-white">Personalized AI feed</h2>
+      <p className="mt-2 text-sm text-ink-muted">
+        Based on your search, clicks, and wishlist behavior using local + memory-backed personalization.
+      </p>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {feed.map((p) => (
+          <Link key={p.id} to={`/app/products/${p.id}`}>
+            <Card className="h-full overflow-hidden !p-0" hover>
+              <img src={p.image} alt="" className="aspect-[4/3] w-full object-cover" />
+              <div className="p-4">
+                <p className="text-xs text-accent-muted">{p.category}</p>
+                <p className="mt-1 font-medium text-white">{p.name}</p>
+                <p className="mt-2 text-sm text-ink-muted">${p.price.toFixed(2)}</p>
+              </div>
+            </Card>
+          </Link>
+        ))}
+      </div>
 
       <h2 className="mt-14 font-display text-xl text-white">Jump back in</h2>
       <div className="mt-6 grid gap-6 md:grid-cols-2">

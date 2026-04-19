@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 import { getStore, saveStore } from "../data/store.js";
 import { signToken, authMiddleware, getUserId } from "../middleware/auth.js";
 import type { User } from "../types.js";
+import { defaultBehavior } from "../lib/personalization.js";
 
 const router = Router();
 
@@ -30,7 +31,7 @@ router.post("/signup", async (req, res) => {
   store.users.push(user);
   store.carts[user.id] = store.carts[user.id] ?? [];
   store.wishlists[user.id] = store.wishlists[user.id] ?? [];
-  store.userBehavior[user.id] = store.userBehavior[user.id] ?? { viewedProductIds: [], categoryClicks: {} };
+  store.userBehavior[user.id] = store.userBehavior[user.id] ?? defaultBehavior();
   saveStore();
   const token = signToken({ sub: user.id, email: user.email });
   res.status(201).json({

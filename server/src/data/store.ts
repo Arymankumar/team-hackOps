@@ -13,6 +13,8 @@ const emptyStore = (): StoreData => ({
   orders: [],
   wishlists: {},
   userBehavior: {},
+  dealNotifications: {},
+  dealWatch: {},
 });
 
 let cache: StoreData | null = null;
@@ -31,6 +33,8 @@ export function getStore(): StoreData {
     if (!cache.carts) cache.carts = {};
     if (!cache.wishlists) cache.wishlists = {};
     if (!cache.userBehavior) cache.userBehavior = {};
+    if (!cache.dealNotifications) cache.dealNotifications = {};
+    if (!cache.dealWatch) cache.dealWatch = {};
     return cache;
   } catch {
     cache = emptyStore();

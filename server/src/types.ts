@@ -43,5 +43,26 @@ export type StoreData = {
   carts: Record<string, CartItem[]>;
   orders: Order[];
   wishlists: Record<string, string[]>;
-  userBehavior: Record<string, { viewedProductIds: string[]; categoryClicks: Record<string, number> }>;
+  userBehavior: Record<
+    string,
+    {
+      viewedProductIds: string[];
+      categoryClicks: Record<string, number>;
+      searchTerms: string[];
+      wishlistProductIds: string[];
+      lastInteractedAt: string;
+    }
+  >;
+  dealNotifications: Record<string, DealNotification[]>;
+  dealWatch: Record<string, Record<string, number>>;
+};
+
+export type DealNotification = {
+  id: string;
+  productId: string;
+  title: string;
+  message: string;
+  discountPercent: number;
+  createdAt: string;
+  read: boolean;
 };

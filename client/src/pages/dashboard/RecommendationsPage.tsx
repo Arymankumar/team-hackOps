@@ -9,7 +9,7 @@ export function RecommendationsPage() {
   const [data, setData] = useState<{
     recommendations: Product[];
     insight: string;
-    signals: { topCategories: string[]; recentViews: string[] };
+    signals: { topCategories: string[]; recentViews: string[]; recentSearches: string[]; wishlistCount: number };
   } | null>(null);
   const [err, setErr] = useState("");
 
@@ -20,7 +20,7 @@ export function RecommendationsPage() {
         const res = await api<{
           recommendations: Product[];
           insight: string;
-          signals: { topCategories: string[]; recentViews: string[] };
+          signals: { topCategories: string[]; recentViews: string[]; recentSearches: string[]; wishlistCount: number };
         }>("/recommendations");
         if (!cancelled) setData(res);
       } catch (e) {
@@ -62,6 +62,12 @@ export function RecommendationsPage() {
               Recent views: {data.signals.recentViews.length} sku(s)
             </span>
           )}
+          {data.signals.recentSearches.length > 0 && (
+            <span className="rounded-full bg-white/10 px-3 py-1">
+              Searches: {data.signals.recentSearches.join(", ")}
+            </span>
+          )}
+          <span className="rounded-full bg-white/10 px-3 py-1">Wishlist signals: {data.signals.wishlistCount}</span>
         </div>
       </Card>
 

@@ -5,6 +5,7 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/Button";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import type { DealNotification } from "@/types";
 
 const nav = [
   { to: "/app/dashboard", label: "Dashboard", icon: MHome },
@@ -26,6 +27,8 @@ export function DashboardLayout() {
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<DealNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const loc = useLocation();
   const navigate = useNavigate();
 
@@ -45,6 +48,40 @@ export function DashboardLayout() {
       cancelled = true;
     };
   }, [loc.pathname]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await api<{ notifications: DealNotification[]; unreadCount: number }>("/notifications");
+        if (!cancelled) {
+          setNotifications(data.notifications);
+          setUnreadCount(data.unreadCount);
+        }
+      } catch {
+        if (!cancelled) {
+          setNotifications([]);
+          setUnreadCount(0);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loc.pathname]);
+
+  async function submitSearch(term: string) {
+    const normalized = term.trim();
+    if (!normalized) return;
+    navigate(`/app/products?q=${encodeURIComponent(normalized)}`);
+    await api("/behavior/search", { method: "POST", body: JSON.stringify({ term: normalized }) }).catch(() => {});
+  }
+
+  async function markNotificationAsRead(id: string) {
+    setNotifications((prev) => prev.map((item) => (item.id === id ? { ...item, read: true } : item)));
+    setUnreadCount((count) => Math.max(0, count - 1));
+    await api(`/notifications/${id}/read`, { method: "POST" }).catch(() => {});
+  }
 
   const showUpgrade = user && user.plan !== "premium";
 
@@ -136,9 +173,7 @@ export function DashboardLayout() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && search.trim()) {
-                    navigate(`/app/products?q=${encodeURIComponent(search.trim())}`);
-                  }
+                  if (e.key === "Enter") void submitSearch(search);
                 }}
                 placeholder="Search products, SKUs, categories…"
                 className="w-full rounded-2xl border border-white/10 bg-black/25 py-2.5 pl-11 pr-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-accent/35 focus:ring-1 focus:ring-accent/25"
@@ -169,7 +204,7 @@ export function DashboardLayout() {
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                     />
                   </svg>
-                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-accent ring-2 ring-surface" />
+                  {unreadCount > 0 && <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-accent ring-2 ring-surface" />}
                 </button>
                 <AnimatePresence>
                   {notifOpen && (
@@ -181,8 +216,21 @@ export function DashboardLayout() {
                     >
                       <p className="text-xs font-medium text-ink-faint">Notifications</p>
                       <ul className="mt-2 space-y-2 text-sm text-ink-muted">
-                        <li className="rounded-xl bg-white/5 px-3 py-2">New deals match your Home category interest.</li>
-                        <li className="rounded-xl bg-white/5 px-3 py-2">Order processing — connect webhooks for live updates.</li>
+                        {notifications.slice(0, 5).map((item) => (
+                          <li
+                            key={item.id}
+                            className={`rounded-xl px-3 py-2 ${item.read ? "bg-white/5" : "bg-accent/15"}`}
+                            onClick={() => {
+                              if (!item.read) void markNotificationAsRead(item.id);
+                              navigate(`/app/products/${item.productId}`);
+                              setNotifOpen(false);
+                            }}
+                          >
+                            <p className="font-medium text-white">{item.title}</p>
+                            <p className="mt-1 text-xs">{item.message}</p>
+                          </li>
+                        ))}
+                        {notifications.length === 0 && <li className="rounded-xl bg-white/5 px-3 py-2">No alerts yet.</li>}
                       </ul>
                     </motion.div>
                   )}
@@ -234,6 +282,9 @@ export function DashboardLayout() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void submitSearch(search);
+              }}
               placeholder="Search…"
               className="w-full rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-sm outline-none"
             />
