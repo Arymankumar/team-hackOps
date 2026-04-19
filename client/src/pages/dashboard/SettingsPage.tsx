@@ -25,7 +25,7 @@ export function SettingsPage() {
 
       <Card className="mt-6 !p-6" hover={false}>
         <h2 className="font-medium text-white">Appearance</h2>
-        <p className="mt-2 text-sm text-ink-muted">Dark theme is the default for ShopForge AI. Light mode can be added with a CSS variable toggle.</p>
+        <p className="mt-2 text-sm text-ink-muted">Dark theme is the default for SmartShopping AI. Light mode can be added with a CSS variable toggle.</p>
       </Card>
     </div>
   );

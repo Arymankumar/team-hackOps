@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "shopforge-dev-secret-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET ?? "smartshopping-dev-secret-change-in-production";
 
 export type JwtPayload = { sub: string; email: string };
 

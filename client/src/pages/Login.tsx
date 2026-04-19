@@ -40,7 +40,7 @@ export function Login() {
       </motion.div>
       <Card className="w-full max-w-md p-8" hover={false}>
         <h1 className="font-display text-2xl font-semibold text-white">Welcome back</h1>
-        <p className="mt-2 text-sm text-ink-muted">Sign in to your ShopForge AI workspace.</p>
+        <p className="mt-2 text-sm text-ink-muted">Sign in to your SmartShopping AI workspace.</p>
 
         <div className="mt-8 grid gap-3">
           <button

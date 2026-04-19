@@ -22,7 +22,7 @@ export function DashboardHome() {
           Hi {user?.name?.split(" ")[0] ?? "there"}, here is your command center
         </h1>
         <p className="mt-3 max-w-2xl text-ink-muted">
-          ShopForge AI connects this dashboard to your recommendation engine, payments, and inventory. Everything here is
+          SmartShopping AI connects this dashboard to your recommendation engine, payments, and inventory. Everything here is
           wired to a real API so you can extend it without reworking the UI.
         </p>
       </motion.div>

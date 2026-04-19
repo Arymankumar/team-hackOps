@@ -14,7 +14,7 @@ export function Logo({ className = "" }: { className?: string }) {
         </svg>
       </span>
       <span className="text-lg text-white">
-        ShopForge<span className="text-accent-muted"> AI</span>
+        SmartShopping<span className="text-accent-muted"> AI</span>
       </span>
     </Link>
   );
