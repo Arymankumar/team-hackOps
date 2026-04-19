@@ -28,11 +28,11 @@ export async function ensureUserBank(bankId: string): Promise<void> {
     await c.getBankProfile(bankId);
   } catch {
     await c.createBank(bankId, {
-      name: `ShopForge memories (${bankId})`,
+      name: `SmartShopping AI memories (${bankId})`,
     });
   }
 }
 
 export function userMemoryBankId(userId: string): string {
-  return `shopforge-${userId}`;
+  return `smartshopping-${userId}`;
 }

@@ -317,7 +317,7 @@ export function Landing() {
           <div>
             <Logo />
             <p className="mt-4 max-w-sm text-sm text-ink-muted">
-              ShopForge AI is a demo-ready SaaS shell. Swap the JSON store for Postgres, wire Stripe, and plug your
+              SmartShopping AI is a demo-ready SaaS shell. Swap the JSON store for Postgres, wire Stripe, and plug your
               ranking service.
             </p>
           </div>
@@ -370,7 +370,7 @@ export function Landing() {
           </div>
         </div>
         <p className="mx-auto mt-12 max-w-6xl text-center text-xs text-ink-faint">
-          © {new Date().getFullYear()} ShopForge AI. Built for demonstration purposes.
+          © {new Date().getFullYear()} SmartShopping AI. Built for demonstration purposes.
         </p>
       </footer>
     </div>

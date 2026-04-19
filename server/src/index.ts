@@ -26,7 +26,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "ShopForge AI API" });
+  res.json({ ok: true, service: "SmartShopping AI API" });
 });
 
 app.use("/api/auth", authRoutes);
@@ -45,5 +45,5 @@ app.use((_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`ShopForge API listening on http://localhost:${PORT}`);
+  console.log(`SmartShopping AI API listening on http://localhost:${PORT}`);
 });

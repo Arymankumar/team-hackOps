@@ -1,5 +1,5 @@
 {
-  "name": "shopforge-ai",
+  "name": "smartshopping-ai",
   "private": true,
   "workspaces": [
     "client",
